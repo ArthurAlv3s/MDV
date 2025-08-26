@@ -1,107 +1,131 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import {
+  FiMenu,
+  FiHome,
+  FiStar,
+  FiClock,
+  FiList,
+  FiMessageCircle,
+  FiSettings,
+  FiUser,
+} from "react-icons/fi";
 
 export default function LandingPage() {
-    const irpara = useNavigate()
-    function navegar(){
-        irpara("/login")
-    }
+  const [menuOpen, setMenuOpen] = useState(true);
+  const navigate = useNavigate();
 
-    function cad() {
-    irpara("/registro")
-    }
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const goLogin = () => navigate("/login");
+  const goRegister = () => navigate("/registro");
 
-    return (
-        <div className="font-sans text-gray-800">
-            <header className="bg-green-700 text-white px-6 py-4 flex justify-between items-center">
-                <div className="text-2xl font-bold">Manual da Vida</div>
-                <nav className="space-x-4">
-                    <a href="#">Tutoriais</a>
-                    <a href="/ajuda">Ajuda</a>
-                    <a href="/sobre">Sobre Nós</a>
+  const menuItems = [
+    { name: "Início", icon: <FiHome /> },
+    { name: "Tutoriais", icon: <FiStar /> },
+    { name: "Curtidos", icon: <FiClock /> },
+    { name: "Minhas Playlists", icon: <FiList /> },
+    { name: "Chatbot", icon: <FiMessageCircle /> },
+    { name: "Histórico", icon: <FiClock /> },
+    { name: "Feedback", icon: <FiMessageCircle /> },
+    { name: "Configuração", icon: <FiSettings /> },
+    { name: "Você", icon: <FiUser /> },
+  ];
 
-                </nav>
-                <div className="space-x-2">
-                   
-                    <button onClick={navegar} className="bg-white text-green-700 px-4 py-1 rounded">Entrar</button>
-                    
-                    <button onClick={cad} className="bg-white text-green-700 px-4 py-1 rounded">Cadastrar</button>
+  // 🖼️ Tutoriais com imagens voltadas para "informação/educação"
+  const tutorials = [
+    { title: "Como organizar seus estudos", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b" },
+    { title: "Aprenda a usar planilhas no dia a dia", img: "https://images.unsplash.com/photo-1581090700227-4c4f50b1d6c5" },
+    { title: "Dicas rápidas de produtividade", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d" },
+    { title: "Guia básico de finanças pessoais", img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f" },
+    { title: "Aprenda a escrever melhor", img: "https://images.unsplash.com/photo-1509057199576-632a47484ece" },
+    { title: "Como pesquisar com eficiência", img: "https://images.unsplash.com/photo-1498079022511-d15614cb1c02" },
+  ];
 
-                </div>
-            </header>
+  // 🎨 Nova paleta de cores (Tema Informação)
+  const mainColor = "#1E293B";   // Azul grafite (header/sidebar)
+  const accentColor = "#38BDF8"; // Azul claro (educação, clareza)
+  const bgLight = "#F1F5F9";     // Fundo claro
+  const textColor = "#111827";   // Texto cinza escuro
 
-            <section className="bg-green-100 py-20 px-6 text-center">
-                <h1 className="text-4xl font-bold mb-4">Seja Independente com Conhecimento!</h1>
-                <p className="mb-6 text-lg">Aprenda tudo que você precisa para se tornar autossuficiente com nossos tutoriais gratuitos.</p>
-                <div className="flex justify-center space-x-2">
-                    <select className="px-4 py-2 rounded border">
-                        <option>Categorias</option>
-                        <option>Financeiro</option>
-                        <option>Organização Pessoal</option>
-                        <option>Saúde Mental</option>
-                        <option>Cozinha</option>
-                    </select>
-                    <select className="px-4 py-2 rounded border">
-                        <option>Filtrar por tipo</option>
-                        <option>Texto</option>
-                        <option>Áudio</option>
-                        <option>Vídeo</option>
-                    </select>
-                    <button className="bg-green-700 text-white px-6 py-2 rounded">Buscar</button>
-                </div>
-                <p className="mt-4 text-sm">Destaques: Organize suas finanças, Aprenda a cozinhar, Como lidar com a pressão da faculdade.</p>
-            </section>
-
-            <section className="bg-white py-20 px-6 text-center" id="tutoriais">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-4">Tutoriais Populares</h2>
-                    <p className="text-gray-600 mb-6">Explore nossos tutoriais e aprenda a conquistar sua independência em várias áreas da vida.</p>
-                    <div className="flex justify-center space-x-6">
-                        <div className="max-w-xs text-left bg-green-50 p-4 rounded-lg shadow-lg">
-                            <h3 className="font-semibold text-lg">Autossuficiência Financeira</h3>
-                            <p className="text-sm text-gray-600 mb-3">Aprenda a controlar suas finanças, investir e se organizar financeiramente.</p>
-                            <button className="bg-green-700 text-white px-4 py-1 rounded">Ver Tutorial</button>
-                        </div>
-                        <div className="max-w-xs text-left bg-green-50 p-4 rounded-lg shadow-lg">
-                            <h3 className="font-semibold text-lg">Saúde Mental</h3>
-                            <p className="text-sm text-gray-600 mb-3">Descubra como cuidar da sua saúde mental, especialmente em momentos de transição.</p>
-                            <button className="bg-green-700 text-white px-4 py-1 rounded">Ver Tutorial</button>
-                        </div>
-                        <div className="max-w-xs text-left bg-green-50 p-4 rounded-lg shadow-lg">
-                            <h3 className="font-semibold text-lg">Organização Pessoal</h3>
-                            <p className="text-sm text-gray-600 mb-3">Dicas para organizar sua rotina, manter o foco e ser produtivo no seu dia a dia.</p>
-                            <button className="bg-green-700 text-white px-4 py-1 rounded">Ver Tutorial</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section className="bg-green-700 text-white py-20 px-6 text-center" id="sobre">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-4">Sobre o Manual da Vida</h2>
-                    <p className="text-lg">O Manual da Vida é uma plataforma dedicada a ajudar pessoas que buscam a independência, seja por necessidade ou por vontade. Oferecemos tutoriais e recursos práticos em diversas áreas da vida.</p>
-                    <p className="mt-6">Nossa missão é fornecer informações acessíveis e de qualidade para que você possa conquistar sua liberdade e autossuficiência.</p>
-                </div>
-            </section>
-
-            <section className="bg-white py-20 px-6 text-center" id="ajuda">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-4">Precisa de Ajuda?</h2>
-                    <p className="text-lg mb-6">Nossa inteligência artificial está pronta para te ajudar. Se tiver alguma dúvida, pergunte abaixo!</p>
-                    <input
-                        type="text"
-                        placeholder="Digite sua pergunta aqui..."
-                        className="px-4 py-2 rounded border mb-4 w-2/3"
-                    />
-                    <button className="bg-green-700 text-white px-6 py-2 rounded">Perguntar</button>
-                    <p className="mt-6 text-sm">Ou entre em contato com nossa equipe através do email: suporte@manualdavida.com</p>
-                </div>
-            </section>
-
-            <footer className="bg-green-700 text-white text-center py-6">
-                <p>&copy; 2025 Manual da Vida. Todos os direitos reservados.</p>
-            </footer>
+  return (
+    <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: textColor }}>
+      {/* Sidebar */}
+      <aside
+        className={`${menuOpen ? "w-64" : "w-16"} p-4 transition-all duration-300 flex flex-col`}
+        style={{ backgroundColor: mainColor, color: "#fff" }}
+      >
+        <div className="flex justify-between items-center mb-6">
+          {menuOpen && <span className="font-bold text-xl text-white">MDV</span>}
+          <button onClick={toggleMenu} className="text-white hover:opacity-80 transition">
+            <FiMenu size={24} />
+          </button>
         </div>
-    );
+
+        <nav className="flex-1">
+          {menuItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-center mb-4 cursor-pointer hover:opacity-80 transition-colors"
+            >
+              <span className="text-xl">{item.icon}</span>
+              {menuOpen && <span className="ml-4">{item.name}</span>}
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <header
+          className="flex justify-end items-center p-4 shadow-md border-b"
+          style={{ backgroundColor: mainColor, borderColor: "#334155" }}
+        >
+          <div className="flex space-x-2">
+            <button
+              onClick={goRegister}
+              className="px-4 py-2 rounded font-semibold hover:brightness-110 transition"
+              style={{ backgroundColor: accentColor, color: "#fff" }}
+            >
+              Registre-se
+            </button>
+            <button
+              onClick={goLogin}
+              className="px-4 py-2 rounded font-semibold hover:brightness-110 transition"
+              style={{ backgroundColor: accentColor, color: "#fff" }}
+            >
+              Login
+            </button>
+          </div>
+        </header>
+
+        {/* Conteúdo Principal */}
+        <main className="flex-1 p-6 overflow-auto">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: mainColor }}>
+            Tutoriais Recomendados
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tutorials.map((tut, idx) => (
+              <div
+                key={idx}
+                className="rounded-lg overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300"
+                style={{ backgroundColor: "#fff" }}
+              >
+                <img
+                  src={tut.img}
+                  alt={tut.title}
+                  className="w-full h-40 object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg" style={{ color: mainColor }}>
+                    {tut.title}
+                  </h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
 }
