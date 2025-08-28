@@ -8,14 +8,14 @@ import {
   FiList,
   FiMessageCircle,
   FiSettings,
-  FiUser,
+  FiMessageSquare,
 } from "react-icons/fi";
 
 const menuItems = [
   { name: "Início", icon: <FiHome />, path: "/" },
   { name: "Tutoriais", icon: <FiStar />, path: "/tutoriais" },
   { name: "Minhas Playlists", icon: <FiList />, path: "/playlists" },
-  { name: "Chatbot", icon: <FiMessageCircle />, path: "/chatbot" },
+  { name: "Chatbot", icon: <FiMessageSquare />, path: "/chatbot" },
   { name: "Histórico", icon: <FiClock />, path: "/historico" },
   { name: "Feedback", icon: <FiMessageCircle />, path: "/feedback" },
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
@@ -42,13 +42,13 @@ export default function LandingPage() {
 
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: mainColor }}>
-      {/* MENU LATERAL */}
+      {/* Sidebar */}
       <aside
         className={`${menuOpen ? "w-64" : "w-16"} p-4 transition-all duration-300 flex flex-col`}
         style={{ backgroundColor: mainColor, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
-          {menuOpen && <span className="font-bold text-xl">MDV</span>}
+          {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
           <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
             <FiMenu size={24} />
           </button>
@@ -67,10 +67,19 @@ export default function LandingPage() {
         </nav>
       </aside>
 
-      {/* CONTEÚDO */}
+      
       <div className="flex-1 flex flex-col">
-        {/* HEADER */}
-        <header className={`flex justify-end items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700`}>
+      {/* HEADER */}
+      <header className={`flex items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700`}>
+        <div className="flex-1"></div>
+
+        <div className="flex-1 flex justify-center">
+          <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+        </div>
+
+        <div className="flex-1 flex justify-end items-center space-x-5">
+          <a href="./" className="text-white">Quer ser um patrocinador?</a>
+          <a href="./" className="text-white">Quer ser um Tutor?</a>
           <button
             onClick={() => navigate("/login")}
             className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
@@ -78,7 +87,9 @@ export default function LandingPage() {
           >
             Login
           </button>
-        </header>
+        </div>
+      </header>
+
 
         {/* MAIN */}
         <main className="flex-1 p-6 overflow-auto space-y-12">

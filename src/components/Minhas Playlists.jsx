@@ -11,6 +11,10 @@ import {
   FiUser,
 } from "react-icons/fi";
 
+
+const accentColor = "#38BDF8";
+
+
 const menuItems = [
   { name: "Início", icon: <FiHome />, path: "/" },
   { name: "Tutoriais", icon: <FiStar />, path: "/tutoriais" },
@@ -47,7 +51,7 @@ export default function Mp() {
         style={{ backgroundColor: mainColor, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
-          {menuOpen && <span className="font-bold text-xl">MDV</span>}
+          {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
           <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
             <FiMenu size={24} />
           </button>
@@ -67,11 +71,32 @@ export default function Mp() {
       </aside>
 
       {/* Conteúdo */}
-      <main className="flex-1 p-6">
-        <h1 className="text-2xl font-bold mb-6">Minhas Playlists</h1>
+      <main className="flex-1">
+
+          <header className={`flex items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700`}>
+        <div className="flex-1"></div>
+
+        <div className="flex-1 flex justify-center">
+          <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+        </div>
+
+        <div className="flex-1 flex justify-end items-center space-x-5">
+          <a href="./" className="text-white">Quer ser um patrocinador?</a>
+          <a href="./" className="text-white">Quer ser um Tutor?</a>
+          <button
+            onClick={() => navigate("/login")}
+            className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
+            style={{ backgroundColor: accentColor, color: "#fff" }}
+          >
+            Login
+          </button>
+        </div>
+      </header>
+
+        <h1 className="text-2xl font-bold mb-6 p-6">Minhas Playlists</h1>
 
         {/* Playlist de Curtidos */}
-        <section className="mb-6">
+        <section className="mb-6 p-6">
           <h2 className="font-semibold text-xl mb-4">Curtidos</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {likedPlaylists.map((playlist, idx) => (
@@ -86,7 +111,7 @@ export default function Mp() {
         </section>
 
         {/* Playlists Criadas pelo Usuário */}
-        <section className="mb-6">
+        <section className="mb-6 p-6">
           <h2 className="font-semibold text-xl mb-4">Suas Playlists</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {userPlaylists.map((playlist, idx) => (
