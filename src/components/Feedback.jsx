@@ -7,6 +7,7 @@ import {
   FiClock,
   FiList,
   FiMessageCircle,
+   FiMessageSquare,
   FiSettings,
 } from "react-icons/fi";
 
@@ -14,7 +15,7 @@ const menuItems = [
   { name: "Início", icon: <FiHome />, path: "/" },
   { name: "Tutoriais", icon: <FiStar />, path: "/tutoriais" },
   { name: "Minhas Playlists", icon: <FiList />, path: "/playlists" },
-  { name: "Chatbot", icon: <FiMessageCircle />, path: "/chatbot" },
+  { name: "Chatbot", icon: <FiMessageSquare />, path: "/chatbot" },
   { name: "Histórico", icon: <FiClock />, path: "/historico" },
   { name: "Feedback", icon: <FiMessageCircle />, path: "/feedback" },
   { name: "Configuração", icon: <FiSettings />, path: "/config" },

@@ -8,6 +8,7 @@ import {
   FiList,
   FiMessageCircle,
   FiSettings,
+  FiMessageSquare,
   FiUser,
 } from "react-icons/fi";
 
@@ -15,11 +16,10 @@ const menuItems = [
   { name: "Início", icon: <FiHome />, path: "/" },
   { name: "Tutoriais", icon: <FiStar />, path: "/tutoriais" },
   { name: "Minhas Playlists", icon: <FiList />, path: "/playlists" },
-  { name: "Chatbot", icon: <FiMessageCircle />, path: "/chatbot" },
+  { name: "Chatbot", icon: <FiMessageSquare />, path: "/chatbot" },
   { name: "Histórico", icon: <FiClock />, path: "/historico" },
   { name: "Feedback", icon: <FiMessageCircle />, path: "/feedback" },
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
-
 ];
 
 const mainColor = "#1E293B";
@@ -38,25 +38,36 @@ export default function Chatbot() {
     if (input.trim() === "") return;
     setMessages([...messages, { sender: "user", text: input }]);
     setInput("");
-    // aqui futuramente entra a lógica de resposta do bot
+    // lógica de resposta do bot
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "Estou pensando na resposta... 🤔" },
+        {
+          sender: "bot",
+          text: "O Manual da Vida (MDV) é um site pensado como um guia prático para a vida adulta. Nele, você encontra dicas, ferramentas e conteúdos organizados em tópicos claros, que vão de finanças pessoais, organização, saúde, estudo e carreira, até habilidades essenciais do dia a dia. A ideia é tornar a vida mais simples e autônoma, oferecendo orientação prática para situações cotidianas. Com uma interface simplória, o site permite que qualquer pessoa navegue facilmente, encontre informações relevantes e aplique o conhecimento no próprio ritmo, sem chamar atenção e sem atrapalhar sua concentração.",
+        },
       ]);
     }, 1000);
   };
 
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: mainColor }}>
+    <div
+      className="flex min-h-screen"
+      style={{ backgroundColor: bgLight, color: mainColor }}
+    >
       {/* Sidebar */}
       <aside
-        className={`${menuOpen ? "w-64" : "w-16"} p-4 transition-all duration-300 flex flex-col`}
+        className={`${
+          menuOpen ? "w-64" : "w-16"
+        } p-4 transition-all duration-300 flex flex-col`}
         style={{ backgroundColor: mainColor, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
-          {menuOpen && <span className="font-bold text-xl">MDV</span>}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
+          {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="hover:opacity-80"
+          >
             <FiMenu size={24} />
           </button>
         </div>
@@ -77,10 +88,21 @@ export default function Chatbot() {
       {/* Conteúdo */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className={`flex justify-end items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700`}>
+        <header className="flex justify-between items-center p-4 shadow-md border-b bg-[#1E293B] border-gray-700">
+          {/* Logo com imagem e texto */}
+          <div className="flex items-center space-x-3">
+            <img
+              src="/coruja_avatar.png"
+              alt="Noctua"
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <span className="text-white font-bold text-lg">Noctua</span>
+          </div>
+
+          {/* Botão de login */}
           <button
             onClick={() => navigate("/login")}
-            className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
+            className="px-4 py-2 rounded font-semibold hover:brightness-110"
             style={{ backgroundColor: accentColor, color: "#fff" }}
           >
             Login
@@ -88,16 +110,24 @@ export default function Chatbot() {
         </header>
 
         {/* Chat Area */}
-        <main className="flex-1 p-6 flex flex-col justify-between">
+        <main className="flex-1 p-6 flex flex-col justify-between relative">
+          {/* Imagem de fundo */}
+          <img
+            src="./public/log.png"
+            alt=""
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none select-none"
+            style={{ width: "300px", height: "auto" }}
+          />
+
           {/* Mensagens */}
-          <div className="flex-1 overflow-y-auto mb-4 space-y-4">
+          <div className="flex-1 overflow-y-auto mb-4 space-y-4 flex flex-col relative z-10">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
                 className={`p-3 rounded-lg max-w-xs ${
                   msg.sender === "user"
-                    ? "bg-blue-500 text-white self-end"
-                    : "bg-gray-200 text-gray-900 self-start"
+                    ? "bg-blue-500 text-white self-end text-right"
+                    : "bg-gray-200 text-gray-900 self-start text-left"
                 }`}
               >
                 {msg.text}
@@ -106,7 +136,7 @@ export default function Chatbot() {
           </div>
 
           {/* Input */}
-          <div className="flex items-center border rounded-lg p-2 bg-white">
+          <div className="flex items-center border rounded-lg p-2 bg-white relative z-10">
             <input
               type="text"
               value={input}

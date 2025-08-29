@@ -7,6 +7,7 @@ import {
   FiClock,
   FiList,
   FiMessageCircle,
+   FiMessageSquare,
   FiSettings,
 } from "react-icons/fi";
 
@@ -14,7 +15,7 @@ const menuItems = [
   { name: "Início", icon: <FiHome />, path: "/" },
   { name: "Tutoriais", icon: <FiStar />, path: "/tutoriais" },
   { name: "Minhas Playlists", icon: <FiList />, path: "/playlists" },
-  { name: "Chatbot", icon: <FiMessageCircle />, path: "/chatbot" },
+  { name: "Chatbot", icon: <FiMessageSquare />, path: "/chatbot" },
   { name: "Histórico", icon: <FiClock />, path: "/historico" },
   { name: "Feedback", icon: <FiMessageCircle />, path: "/feedback" },
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
@@ -67,16 +68,19 @@ export default function Tutoriais() {
   const hasMore = visibleTutorials.length < filteredTutorials.length;
 
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: mainColor }}>
-      {/* Sidebar */}
-      <aside className={`${menuOpen ? "w-64" : "w-16"} p-4 transition-all duration-300 flex flex-col`} style={{ backgroundColor: mainColor, color: "white" }}>
+    <div className="flex" style={{ backgroundColor: bgLight, color: mainColor }}>
+      {/* Sidebar fixa */}
+      <aside
+        className={`fixed top-0 left-0 h-screen ${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col transition-all duration-300`}
+        style={{ backgroundColor: mainColor, color: "white" }}
+      >
         <div className="flex justify-between items-center mb-6">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
           <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
             <FiMenu size={24} />
           </button>
         </div>
-        <nav className="flex-1">
+        <nav className="flex-1 overflow-auto">
           {menuItems.map((item, idx) => (
             <div
               key={idx}
@@ -90,58 +94,62 @@ export default function Tutoriais() {
         </nav>
       </aside>
 
-      {/* Conteúdo */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
+      {/* Conteúdo principal */}
+      <div className={`flex-1 ml-${menuOpen ? "64" : "16"} flex flex-col`} style={{ marginLeft: menuOpen ? "16rem" : "4rem" }}>
+        {/* Header fixo */}
         <header
-  className="flex items-center p-4 shadow-md border-b"
-  style={{ backgroundColor: mainColor }}
->
-  {/* Esquerda → Barra de Pesquisa */}
-  <div className="flex-1 flex">
-    <input
-      type="text"
-      placeholder="Pesquisar tutoriais..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="px-4 py-2 rounded w-full max-w-md border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-    />
-  </div>
+          className="fixed top-0 left-0 right-0 flex items-center p-4 shadow-md z-10"
+          style={{ backgroundColor: mainColor, marginLeft: menuOpen ? "16rem" : "4rem" }}
+        >
+          {/* Esquerda → Barra de Pesquisa */}
+          <div className="flex-1 flex">
+            <input
+              type="text"
+              placeholder="Pesquisar tutoriais..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="px-4 py-2 rounded w-full max-w-md border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            />
+          </div>
 
-  {/* Centro → Logo */}
-  <div className="flex-1 flex justify-center">
-    <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
-  </div>
+          {/* Centro → Logo */}
+          <div className="flex-1 flex justify-center">
+            <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+          </div>
 
-  {/* Direita → Links e Botão */}
-  <div className="flex-1 flex justify-end items-center space-x-5">
-    <a href="./" className="text-white">
-      Quer ser um patrocinador?
-    </a>
-    <a href="./" className="text-white">
-      Quer ser um Tutor?
-    </a>
-    <button
-      onClick={() => navigate("/login")}
-      className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
-      style={{ backgroundColor: accentColor, color: "#fff" }}
-    >
-      Login
-    </button>
-  </div>
-</header>
+          {/* Direita → Links e Botão */}
+          <div className="flex-1 flex justify-end items-center space-x-5">
+            <a href="./" className="text-white">Quer ser um patrocinador?</a>
+            <a href="./" className="text-white">Quer ser um Tutor?</a>
+            <button
+              onClick={() => navigate("/login")}
+              className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
+              style={{ backgroundColor: accentColor, color: "#fff" }}
+            >
+              Login
+            </button>
+          </div>
+        </header>
 
-        {/* Main */}
-        <main className="flex-1 p-6 overflow-auto">
+        {/* Main rolável */}
+        <main className="flex-1 p-6 mt-32 overflow-auto">
           <h1 className="text-2xl font-bold mb-4">Tutoriais</h1>
 
           {/* Filtros */}
           <div className="flex flex-wrap items-center gap-4 mb-6">
-            <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="px-4 py-2 rounded border bg-white">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-4 py-2 rounded border bg-white"
+            >
               {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
             </select>
 
-            <select value={sortByDate} onChange={(e) => setSortByDate(e.target.value)} className="px-4 py-2 rounded border bg-white">
+            <select
+              value={sortByDate}
+              onChange={(e) => setSortByDate(e.target.value)}
+              className="px-4 py-2 rounded border bg-white"
+            >
               <option value="desc">Mais Recentes</option>
               <option value="asc">Mais Antigos</option>
             </select>

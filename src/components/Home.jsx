@@ -19,10 +19,8 @@ const menuItems = [
   { name: "Histórico", icon: <FiClock />, path: "/historico" },
   { name: "Feedback", icon: <FiMessageCircle />, path: "/feedback" },
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
-
 ];
 
-// Exemplos de vídeos
 const tutorials = [
   { title: "Como organizar seus estudos", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b" },
   { title: "Aprenda a usar planilhas no dia a dia", img: "https://images.unsplash.com/photo-1581090700227-4c4f50b1d6c5" },
@@ -42,9 +40,10 @@ export default function LandingPage() {
 
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: mainColor }}>
+
       {/* Sidebar */}
       <aside
-        className={`${menuOpen ? "w-64" : "w-16"} p-4 transition-all duration-300 flex flex-col`}
+        className={`${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
         style={{ backgroundColor: mainColor, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
@@ -67,32 +66,30 @@ export default function LandingPage() {
         </nav>
       </aside>
 
-      
-      <div className="flex-1 flex flex-col">
-      {/* HEADER */}
-      <header className={`flex items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700`}>
-        <div className="flex-1"></div>
+      {/* Conteúdo */}
+      <div className="flex-1 flex flex-col h-screen">
+        {/* Header fixo */}
+        <header className={`flex items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700 sticky top-0 z-20`}>
+          <div className="flex-1"></div>
+          <div className="flex-1 flex justify-center">
+            <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+          </div>
+          <div className="flex-1 flex justify-end items-center space-x-5">
+            <a href="./" className="text-white">Quer ser um patrocinador?</a>
+            <a href="./" className="text-white">Quer ser um Tutor?</a>
+            <button
+              onClick={() => navigate("/login")}
+              className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
+              style={{ backgroundColor: accentColor, color: "#fff" }}
+            >
+              Login
+            </button>
+          </div>
+        </header>
 
-        <div className="flex-1 flex justify-center">
-          <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
-        </div>
-
-        <div className="flex-1 flex justify-end items-center space-x-5">
-          <a href="./" className="text-white">Quer ser um patrocinador?</a>
-          <a href="./" className="text-white">Quer ser um Tutor?</a>
-          <button
-            onClick={() => navigate("/login")}
-            className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
-            style={{ backgroundColor: accentColor, color: "#fff" }}
-          >
-            Login
-          </button>
-        </div>
-      </header>
-
-
-        {/* MAIN */}
-        <main className="flex-1 p-6 overflow-auto space-y-12">
+        {/* Main rolável */}
+        <main className="flex-1 overflow-auto p-6 space-y-12">
+          
           {/* Banner Principal */}
           <section>
             <h2 className="text-3xl font-bold mb-4">Destaque</h2>
@@ -114,10 +111,7 @@ export default function LandingPage() {
             <h2 className="text-2xl font-bold mb-4">Veja novamente</h2>
             <div className="flex space-x-4 overflow-x-auto pb-2">
               {tutorials.slice(0, 4).map((tut, idx) => (
-                <div
-                  key={idx}
-                  className="min-w-[250px] rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform bg-white"
-                >
+                <div key={idx} className="min-w-[250px] rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform bg-white">
                   <img src={tut.img} alt={tut.title} className="w-full h-40 object-cover" />
                   <div className="p-3">
                     <h3 className="font-semibold text-md">{tut.title}</h3>
@@ -132,10 +126,7 @@ export default function LandingPage() {
             <h2 className="text-2xl font-bold mb-4">Recomendados</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {tutorials.map((tut, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-lg overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 bg-white"
-                >
+                <div key={idx} className="rounded-lg overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 bg-white">
                   <img src={tut.img} alt={tut.title} className="w-full h-40 object-cover" />
                   <div className="p-4">
                     <h3 className="font-semibold text-lg">{tut.title}</h3>
@@ -150,10 +141,7 @@ export default function LandingPage() {
             <h2 className="text-2xl font-bold mb-4">Mais vistos / Em alta</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {tutorials.slice().reverse().map((tut, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform bg-white"
-                >
+                <div key={idx} className="rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform bg-white">
                   <img src={tut.img} alt={tut.title} className="w-full h-32 object-cover" />
                   <div className="p-3">
                     <h3 className="font-semibold text-sm">{tut.title}</h3>
