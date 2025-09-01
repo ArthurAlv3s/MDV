@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "./ThemeContext.jsx";
 import {
   FiMenu,
   FiHome,
@@ -9,7 +10,6 @@ import {
   FiMessageCircle,
   FiSettings,
   FiMessageSquare,
-  FiUser,
 } from "react-icons/fi";
 
 const menuItems = [
@@ -22,10 +22,6 @@ const menuItems = [
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
 ];
 
-const mainColor = "#1E293B";
-const accentColor = "#38BDF8";
-const bgLight = "#F1F5F9";
-
 export default function Chatbot() {
   const [menuOpen, setMenuOpen] = useState(true);
   const [messages, setMessages] = useState([
@@ -33,12 +29,12 @@ export default function Chatbot() {
   ]);
   const [input, setInput] = useState("");
   const navigate = useNavigate();
+  const { palette, changePalette } = useTheme(); // <- hook do ThemeContext
 
   const handleSend = () => {
     if (input.trim() === "") return;
     setMessages([...messages, { sender: "user", text: input }]);
     setInput("");
-    // lógica de resposta do bot
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -52,22 +48,19 @@ export default function Chatbot() {
 
   return (
     <div
-      className="flex min-h-screen"
-      style={{ backgroundColor: bgLight, color: mainColor }}
+      className="flex min-h-screen transition-colors duration-500"
+      style={{ backgroundColor: palette.bg, color: palette.text }}
     >
       {/* Sidebar */}
       <aside
         className={`${
           menuOpen ? "w-64" : "w-16"
-        } p-4 transition-all duration-300 flex flex-col`}
-        style={{ backgroundColor: mainColor, color: "white" }}
+        } p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
+        style={{ backgroundColor: palette.main, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="hover:opacity-80"
-          >
+          <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
             <FiMenu size={24} />
           </button>
         </div>
@@ -88,22 +81,24 @@ export default function Chatbot() {
       {/* Conteúdo */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="flex justify-between items-center p-4 shadow-md border-b bg-[#1E293B] border-gray-700">
-          {/* Logo com imagem e texto */}
-          <div className="flex items-center space-x-3">
+        <header
+          className="flex justify-between items-center p-4 shadow-md border-b sticky top-0 z-20 transition-colors duration-500"
+          style={{ backgroundColor: palette.main, borderColor: palette.accent }}
+        >
+          {/* Logo com clique para mudar paleta */}
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={changePalette}>
             <img
               src="/coruja_avatar.png"
               alt="Noctua"
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover hover:scale-110 transition-transform"
             />
             <span className="text-white font-bold text-lg">Noctua</span>
           </div>
 
-          {/* Botão de login */}
           <button
             onClick={() => navigate("/login")}
             className="px-4 py-2 rounded font-semibold hover:brightness-110"
-            style={{ backgroundColor: accentColor, color: "#fff" }}
+            style={{ backgroundColor: palette.accent, color: "#fff" }}
           >
             Login
           </button>
@@ -111,24 +106,20 @@ export default function Chatbot() {
 
         {/* Chat Area */}
         <main className="flex-1 p-6 flex flex-col justify-between relative">
-          {/* Imagem de fundo */}
-          <img
-            src="./public/log.png"
-            alt=""
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none select-none"
-            style={{ width: "300px", height: "auto" }}
-          />
-
-          {/* Mensagens */}
           <div className="flex-1 overflow-y-auto mb-4 space-y-4 flex flex-col relative z-10">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
                 className={`p-3 rounded-lg max-w-xs ${
                   msg.sender === "user"
-                    ? "bg-blue-500 text-white self-end text-right"
-                    : "bg-gray-200 text-gray-900 self-start text-left"
+                    ? "text-white self-end text-right"
+                    : "self-start text-left"
                 }`}
+                style={{
+                  backgroundColor:
+                    msg.sender === "user" ? palette.accent : palette.card,
+                  color: msg.sender === "user" ? "#fff" : palette.text,
+                }}
               >
                 {msg.text}
               </div>
@@ -147,7 +138,7 @@ export default function Chatbot() {
             <button
               onClick={handleSend}
               className="ml-2 px-4 py-2 rounded text-white"
-              style={{ backgroundColor: accentColor }}
+              style={{ backgroundColor: palette.accent }}
             >
               Enviar
             </button>

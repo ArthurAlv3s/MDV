@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "./ThemeContext.jsx";
 import {
   FiMenu,
   FiHome,
@@ -7,7 +8,7 @@ import {
   FiClock,
   FiList,
   FiMessageCircle,
-   FiMessageSquare,
+  FiMessageSquare,
   FiSettings,
 } from "react-icons/fi";
 
@@ -39,21 +40,18 @@ const historicoVideos = [
   },
 ];
 
-const mainColor = "#1E293B";
-const accentColor = "#38BDF8";
-const bgLight = "#F1F5F9";
-
 export default function Historico() {
   const [menuOpen, setMenuOpen] = useState(true);
   const navigate = useNavigate();
+  const { palette, changePalette } = useTheme(); // <--- importado do ThemeContext
 
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: mainColor }}>
+    <div className="flex min-h-screen" style={{ backgroundColor: palette.bg, color: palette.text }}>
       
       {/* Sidebar */}
       <aside
         className={`${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
-        style={{ backgroundColor: mainColor, color: "white" }}
+        style={{ backgroundColor: palette.main, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
@@ -80,19 +78,25 @@ export default function Historico() {
         
         {/* Header */}
         <header
-          className={`flex items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700 sticky top-0 z-20`}
+          className="flex items-center p-4 shadow-md sticky top-0 z-20"
+          style={{ backgroundColor: palette.main }}
         >
           <div className="flex-1"></div>
           <div className="flex-1 flex justify-center">
-            <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+            <img
+              src="/arvore.png"
+              alt="Logo"
+              className="h-20 w-auto cursor-pointer hover:scale-110 transition-transform"
+              onClick={changePalette} // <--- muda a paleta ao clicar
+            />
           </div>
           <div className="flex-1 flex justify-end items-center space-x-5">
             <a href="./" className="text-white">Quer ser um patrocinador?</a>
             <a href="./" className="text-white">Quer ser um Tutor?</a>
             <button
               onClick={() => navigate("/login")}
-              className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
-              style={{ backgroundColor: accentColor, color: "#fff" }}
+              className="px-4 py-2 rounded font-semibold hover:brightness-110"
+              style={{ backgroundColor: palette.accent, color: "#fff" }} // <--- cor dinâmica
             >
               Login
             </button>
@@ -106,7 +110,8 @@ export default function Historico() {
             {historicoVideos.map((video, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+                className="rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+                style={{ backgroundColor: palette.card }} // <--- cor dinâmica dos cards
               >
                 <img
                   src={video.img}
@@ -118,7 +123,7 @@ export default function Historico() {
                   <p className="text-sm text-gray-600">{video.tempo}</p>
                   <button
                     className="mt-3 px-3 py-2 rounded-lg text-white font-medium"
-                    style={{ backgroundColor: accentColor }}
+                    style={{ backgroundColor: palette.accent }} // <--- cor dinâmica
                   >
                     Assistir novamente
                   </button>

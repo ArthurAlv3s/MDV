@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "./ThemeContext.jsx";
 import {
   FiMenu,
   FiHome,
@@ -7,11 +8,9 @@ import {
   FiClock,
   FiList,
   FiMessageCircle,
-   FiMessageSquare,
+  FiMessageSquare,
   FiSettings,
 } from "react-icons/fi";
-
-const accentColor = "#38BDF8";
 
 const menuItems = [
   { name: "Início", icon: <FiHome />, path: "/" },
@@ -32,22 +31,18 @@ const userPlaylistsSample = [
   { title: "Playlist de Produtividade", img: "https://images.unsplash.com/photo-1509057199576-632a47484ece" },
 ];
 
-const mainColor = "#1E293B";
-const bgLight = "#F1F5F9";
-
 export default function Mp() {
   const [menuOpen, setMenuOpen] = useState(true);
   const [userPlaylists] = useState(userPlaylistsSample);
   const navigate = useNavigate();
+  const { palette, changePalette } = useTheme();
 
   return (
-    <div className="flex" style={{ backgroundColor: bgLight, color: mainColor }}>
+    <div className="flex" style={{ backgroundColor: palette.bg, color: palette.text }}>
       {/* Sidebar fixa */}
       <aside
-        className={`fixed top-0 left-0 h-screen ${
-          menuOpen ? "w-64" : "w-16"
-        } p-4 transition-all duration-300 flex flex-col`}
-        style={{ backgroundColor: mainColor, color: "white" }}
+        className={`fixed top-0 left-0 h-screen ${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col transition-all duration-300`}
+        style={{ backgroundColor: palette.main, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
@@ -70,35 +65,32 @@ export default function Mp() {
       </aside>
 
       {/* Conteúdo principal */}
-      <div
-        className="flex-1 flex flex-col"
-        style={{ marginLeft: menuOpen ? "16rem" : "4rem" }}
-      >
+      <div className="flex-1 flex flex-col" style={{ marginLeft: menuOpen ? "16rem" : "4rem" }}>
         {/* Header fixo */}
         <header
           className="fixed top-0 left-0 right-0 flex items-center p-4 shadow-md z-10"
-          style={{
-            backgroundColor: mainColor,
-            marginLeft: menuOpen ? "16rem" : "4rem",
-          }}
+          style={{ backgroundColor: palette.main, marginLeft: menuOpen ? "16rem" : "4rem" }}
         >
           <div className="flex-1"></div>
 
+          {/* Logo central */}
           <div className="flex-1 flex justify-center">
-            <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+            <img
+              src="/arvore.png"
+              alt="Logo"
+              className="h-20 w-auto cursor-pointer hover:scale-110 transition-transform"
+              onClick={changePalette} // muda a paleta ao clicar
+            />
           </div>
 
+          {/* Links e botão */}
           <div className="flex-1 flex justify-end items-center space-x-5">
-            <a href="./" className="text-white">
-              Quer ser um patrocinador?
-            </a>
-            <a href="./" className="text-white">
-              Quer ser um Tutor?
-            </a>
+            <a href="./" className="text-white">Quer ser um patrocinador?</a>
+            <a href="./" className="text-white">Quer ser um Tutor?</a>
             <button
               onClick={() => navigate("/login")}
               className="px-4 py-2 rounded font-semibold hover:brightness-110"
-              style={{ backgroundColor: accentColor, color: "#fff" }}
+              style={{ backgroundColor: palette.accent, color: "#fff" }}
             >
               Login
             </button>
@@ -116,13 +108,10 @@ export default function Mp() {
               {likedPlaylists.map((playlist, idx) => (
                 <div
                   key={`liked-${idx}`}
-                  className="bg-white rounded-lg shadow-md overflow-hidden"
+                  className="rounded-lg shadow-md overflow-hidden"
+                  style={{ backgroundColor: palette.card }}
                 >
-                  <img
-                    src={playlist.img}
-                    alt={playlist.title}
-                    className="w-full h-48 object-cover"
-                  />
+                  <img src={playlist.img} alt={playlist.title} className="w-full h-48 object-cover" />
                   <div className="p-4">
                     <h3 className="font-bold text-lg">{playlist.title}</h3>
                   </div>
@@ -138,13 +127,10 @@ export default function Mp() {
               {userPlaylists.map((playlist, idx) => (
                 <div
                   key={`user-${idx}`}
-                  className="bg-white rounded-lg shadow-md overflow-hidden"
+                  className="rounded-lg shadow-md overflow-hidden"
+                  style={{ backgroundColor: palette.card }}
                 >
-                  <img
-                    src={playlist.img}
-                    alt={playlist.title}
-                    className="w-full h-48 object-cover"
-                  />
+                  <img src={playlist.img} alt={playlist.title} className="w-full h-48 object-cover" />
                   <div className="p-4">
                     <h3 className="font-bold text-lg">{playlist.title}</h3>
                   </div>

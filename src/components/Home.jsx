@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "./ThemeContext.jsx";
+
 import {
   FiMenu,
   FiHome,
@@ -30,25 +32,55 @@ const tutorials = [
   { title: "Como pesquisar com eficiência", img: "https://images.unsplash.com/photo-1498079022511-d15614cb1c02" },
 ];
 
-const mainColor = "#1E293B";
-const accentColor = "#38BDF8";
-const bgLight = "#F1F5F9";
+// Paletas de cores
+const colorPalettes = [
+  {
+    name: "Vinho",
+    main: "#581C1C", // sidebar/header
+    accent: "#E11D48", // botões
+    bg: "#FDE2E4", // fundo principal
+    text: "#3B0A0A", // texto
+    card: "#FFF0F3", // cards
+  },
+  {
+    name: "Azul",
+    main: "#1E293B",
+    accent: "#38BDF8",
+    bg: "#F1F5F9",
+    text: "#1E293B",
+    card: "#FFFFFF",
+  },
+  {
+    name: "Verde",
+    main: "#064E3B", // sidebar/header
+    accent: "#10B981", // botões
+    bg: "#D1FAE5", // fundo principal
+    text: "#052E16", // texto
+    card: "#ECFDF5", // cards
+  },
+];
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(true);
   const navigate = useNavigate();
-
+  const { palette, changePalette } = useTheme();
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: mainColor }}>
-
+    <div
+      className="flex min-h-screen transition-colors duration-500"
+      style={{ backgroundColor: palette.bg, color: palette.text }}
+    >
       {/* Sidebar */}
       <aside
-        className={`${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
-        style={{ backgroundColor: mainColor, color: "white" }}
+        className={`${menuOpen ? "w-64" : "w-16"
+          } p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
+        style={{ backgroundColor: palette.main, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="hover:opacity-80"
+          >
             <FiMenu size={24} />
           </button>
         </div>
@@ -69,18 +101,33 @@ export default function LandingPage() {
       {/* Conteúdo */}
       <div className="flex-1 flex flex-col h-screen">
         {/* Header fixo */}
-        <header className={`flex items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700 sticky top-0 z-20`}>
+        <header
+          className="flex items-center p-4 shadow-md border-b sticky top-0 z-20 transition-colors duration-500"
+          style={{
+            backgroundColor: palette.main,
+            borderColor: palette.accent,
+          }}
+        >
           <div className="flex-1"></div>
           <div className="flex-1 flex justify-center">
-            <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+            <img
+              src="/arvore.png"
+              alt="Logo"
+              className="h-20 w-auto cursor-pointer hover:scale-110 transition-transform"
+              onClick={changePalette} // aqui
+            />
           </div>
           <div className="flex-1 flex justify-end items-center space-x-5">
-            <a href="./" className="text-white">Quer ser um patrocinador?</a>
-            <a href="./" className="text-white">Quer ser um Tutor?</a>
+            <a href="./" className="text-white">
+              Quer ser um patrocinador?
+            </a>
+            <a href="./" className="text-white">
+              Quer ser um Tutor?
+            </a>
             <button
               onClick={() => navigate("/login")}
-              className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
-              style={{ backgroundColor: accentColor, color: "#fff" }}
+              className="px-4 py-2 rounded font-semibold hover:brightness-110"
+              style={{ backgroundColor: palette.accent, color: "#fff" }}
             >
               Login
             </button>
@@ -89,7 +136,6 @@ export default function LandingPage() {
 
         {/* Main rolável */}
         <main className="flex-1 overflow-auto p-6 space-y-12">
-          
           {/* Banner Principal */}
           <section>
             <h2 className="text-3xl font-bold mb-4">Destaque</h2>
@@ -101,7 +147,9 @@ export default function LandingPage() {
               />
               <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/70 to-transparent text-white">
                 <h3 className="text-2xl font-bold">Novo Guia de Produtividade</h3>
-                <p className="text-sm mt-2">Assista agora e aprenda a organizar melhor sua rotina!</p>
+                <p className="text-sm mt-2">
+                  Assista agora e aprenda a organizar melhor sua rotina!
+                </p>
               </div>
             </div>
           </section>
@@ -111,8 +159,16 @@ export default function LandingPage() {
             <h2 className="text-2xl font-bold mb-4">Veja novamente</h2>
             <div className="flex space-x-4 overflow-x-auto pb-2">
               {tutorials.slice(0, 4).map((tut, idx) => (
-                <div key={idx} className="min-w-[250px] rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform bg-white">
-                  <img src={tut.img} alt={tut.title} className="w-full h-40 object-cover" />
+                <div
+                  key={idx}
+                  className="min-w-[250px] rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform"
+                  style={{ backgroundColor: palette.card }}
+                >
+                  <img
+                    src={tut.img}
+                    alt={tut.title}
+                    className="w-full h-40 object-cover"
+                  />
                   <div className="p-3">
                     <h3 className="font-semibold text-md">{tut.title}</h3>
                   </div>
@@ -126,8 +182,16 @@ export default function LandingPage() {
             <h2 className="text-2xl font-bold mb-4">Recomendados</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {tutorials.map((tut, idx) => (
-                <div key={idx} className="rounded-lg overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 bg-white">
-                  <img src={tut.img} alt={tut.title} className="w-full h-40 object-cover" />
+                <div
+                  key={idx}
+                  className="rounded-lg overflow-hidden shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300"
+                  style={{ backgroundColor: palette.card }}
+                >
+                  <img
+                    src={tut.img}
+                    alt={tut.title}
+                    className="w-full h-40 object-cover"
+                  />
                   <div className="p-4">
                     <h3 className="font-semibold text-lg">{tut.title}</h3>
                   </div>
@@ -140,14 +204,25 @@ export default function LandingPage() {
           <section>
             <h2 className="text-2xl font-bold mb-4">Mais vistos / Em alta</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {tutorials.slice().reverse().map((tut, idx) => (
-                <div key={idx} className="rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform bg-white">
-                  <img src={tut.img} alt={tut.title} className="w-full h-32 object-cover" />
-                  <div className="p-3">
-                    <h3 className="font-semibold text-sm">{tut.title}</h3>
+              {tutorials
+                .slice()
+                .reverse()
+                .map((tut, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform"
+                    style={{ backgroundColor: palette.card }}
+                  >
+                    <img
+                      src={tut.img}
+                      alt={tut.title}
+                      className="w-full h-32 object-cover"
+                    />
+                    <div className="p-3">
+                      <h3 className="font-semibold text-sm">{tut.title}</h3>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </section>
         </main>

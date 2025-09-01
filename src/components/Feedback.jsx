@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "./ThemeContext.jsx";
 import {
   FiMenu,
   FiHome,
@@ -7,7 +8,7 @@ import {
   FiClock,
   FiList,
   FiMessageCircle,
-   FiMessageSquare,
+  FiMessageSquare,
   FiSettings,
 } from "react-icons/fi";
 
@@ -21,10 +22,6 @@ const menuItems = [
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
 ];
 
-const mainColor = "#1E293B";
-const bgLight = "#F1F5F9";
-const accentColor = "#38BDF8";
-
 export default function Feedback() {
   const [menuOpen, setMenuOpen] = useState(true);
   const [feedbacks, setFeedbacks] = useState([]);
@@ -33,6 +30,7 @@ export default function Feedback() {
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(0);
   const navigate = useNavigate();
+  const { palette, changePalette } = useTheme(); // <--- importei do ThemeContext
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,11 +44,11 @@ export default function Feedback() {
   };
 
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: mainColor }}>
+    <div className="flex min-h-screen" style={{ backgroundColor: palette.bg, color: palette.text }}>
       {/* Sidebar */}
       <aside
         className={`${menuOpen ? "w-64" : "w-16"} p-4 transition-all duration-300 flex flex-col`}
-        style={{ backgroundColor: mainColor, color: "white" }}
+        style={{ backgroundColor: palette.main, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
           {menuOpen && <span className="font-bold text-xl">MDV</span>}
@@ -74,105 +72,110 @@ export default function Feedback() {
 
       {/* Conteúdo */}
       <main className="flex-1">
+        {/* Header */}
+        <header
+          className="flex items-center p-4 shadow-md border-b sticky top-0 z-20"
+          style={{ backgroundColor: palette.main }}
+        >
+          <div className="flex-1"></div>
+          <div className="flex-1 flex justify-center">
+            <img
+              src="/arvore.png"
+              alt="Logo"
+              className="h-20 w-auto cursor-pointer hover:scale-110 transition-transform"
+              onClick={changePalette} // <--- clicando na logo muda a paleta
+            />
+          </div>
+          <div className="flex-1 flex justify-end items-center space-x-5">
+            <a href="./" className="text-white">Quer ser um patrocinador?</a>
+            <a href="./" className="text-white">Quer ser um Tutor?</a>
+            <button
+              onClick={() => navigate("/login")}
+              className="px-4 py-2 rounded font-semibold hover:brightness-110"
+              style={{ backgroundColor: palette.accent, color: "#fff" }} // <--- cor dinâmica
+            >
+              Login
+            </button>
+          </div>
+        </header>
 
-      <header className={`flex items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700`}>
-        <div className="flex-1"></div>
-
-        <div className="flex-1 flex justify-center">
-          <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
-        </div>
-
-        <div className="flex-1 flex justify-end items-center space-x-5">
-          <a href="./" className="text-white">Quer ser um patrocinador?</a>
-          <a href="./" className="text-white">Quer ser um Tutor?</a>
-          <button
-            onClick={() => navigate("/login")}
-            className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
-            style={{ backgroundColor: accentColor, color: "#fff" }}
-          >
-            Login
-          </button>
-        </div>
-      </header>
-
-          <div className="p-6">
-
+        <div className="p-6">
           <h1 className="text-3xl font-bold mb-6">Feedback</h1>
 
-{/* Formulário */}
-<div className="bg-white p-6 rounded-lg shadow-md mb-8">
-  <h2 className="text-xl font-bold mb-4">Enviar Feedback</h2>
-  <form onSubmit={handleSubmit} className="space-y-4">
-    <div className="flex gap-4">
-      <select
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-        className="px-4 py-2 rounded border w-1/3"
-      >
-        <option value="Sugestão">Sugestão</option>
-        <option value="Bug">Bug</option>
-        <option value="Elogio">Elogio</option>
-        <option value="Outro">Outro</option>
-      </select>
-      <input
-        type="text"
-        placeholder="Título"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="px-4 py-2 rounded border flex-1"
-      />
-    </div>
-    <textarea
-      placeholder="Mensagem"
-      value={message}
-      onChange={(e) => setMessage(e.target.value)}
-      className="w-full px-4 py-2 rounded border"
-      rows={4}
-    />
-    {/* Avaliação por estrelas */}
-    <div className="flex items-center gap-2">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span
-          key={star}
-          onClick={() => setRating(star)}
-          className={`cursor-pointer text-2xl ${rating >= star ? "text-yellow-400" : "text-gray-300"}`}
-        >
-          ★
-        </span>
-      ))}
-      <span className="ml-2 text-gray-500">Sua avaliação</span>
-    </div>
-    <button
-      type="submit"
-      className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-    >
-      Enviar
-    </button>
-  </form>
-</div>
-
-{/* Lista de feedbacks enviados */}
-{feedbacks.length > 0 && (
-  <div className="space-y-4">
-    <h2 className="text-xl font-bold mb-2">Seus Feedbacks</h2>
-    {feedbacks.map((fb, idx) => (
-      <div key={idx} className="bg-white p-4 rounded-lg shadow-md">
-        <div className="flex justify-between items-center mb-2">
-          <span className="font-semibold">{fb.title}</span>
-          <span className="text-gray-500 text-sm">{fb.date}</span>
-        </div>
-        <p className="mb-2">{fb.message}</p>
-        <span className="text-yellow-400">{'★'.repeat(fb.rating)}{'☆'.repeat(5 - fb.rating)}</span>
-        <div className="text-sm text-gray-500 mt-1">{fb.type}</div>
-      </div>
-    ))}
-  </div>
-)}.
-
-
+          {/* Formulário */}
+          <div className="p-6 rounded-lg shadow-md mb-8" style={{ backgroundColor: palette.card }}>
+            <h2 className="text-xl font-bold mb-4">Enviar Feedback</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex gap-4">
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="px-4 py-2 rounded border w-1/3"
+                >
+                  <option value="Sugestão">Sugestão</option>
+                  <option value="Bug">Bug</option>
+                  <option value="Elogio">Elogio</option>
+                  <option value="Outro">Outro</option>
+                </select>
+                <input
+                  type="text"
+                  placeholder="Título"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="px-4 py-2 rounded border flex-1"
+                />
+              </div>
+              <textarea
+                placeholder="Mensagem"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full px-4 py-2 rounded border"
+                rows={4}
+              />
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    onClick={() => setRating(star)}
+                    className={`cursor-pointer text-2xl ${rating >= star ? "text-yellow-400" : "text-gray-300"}`}
+                  >
+                    ★
+                  </span>
+                ))}
+                <span className="ml-2 text-gray-500">Sua avaliação</span>
+              </div>
+              <button
+                type="submit"
+                className="px-6 py-2 rounded font-semibold hover:brightness-110"
+                style={{ backgroundColor: palette.accent, color: "#fff" }} // <--- cor dinâmica
+              >
+                Enviar
+              </button>
+            </form>
           </div>
 
-
+          {/* Lista de feedbacks */}
+          {feedbacks.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold mb-2">Seus Feedbacks</h2>
+              {feedbacks.map((fb, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-lg shadow-md"
+                  style={{ backgroundColor: palette.card }} // <--- cor dinâmica
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold">{fb.title}</span>
+                    <span className="text-gray-500 text-sm">{fb.date}</span>
+                  </div>
+                  <p className="mb-2">{fb.message}</p>
+                  <span className="text-yellow-400">{'★'.repeat(fb.rating)}{'☆'.repeat(5 - fb.rating)}</span>
+                  <div className="text-sm text-gray-500 mt-1">{fb.type}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

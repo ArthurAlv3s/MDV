@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "./ThemeContext.jsx";
 import {
   FiMenu,
   FiHome,
@@ -26,15 +27,12 @@ const menuItems = [
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
 ];
 
-const mainColor = "#1E293B";
-const accentColor = "#38BDF8";
-const bgLight = "#F1F5F9";
-
 export default function Configuracoes() {
   const [menuOpen, setMenuOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("perfil");
   const [userPhoto, setUserPhoto] = useState(null);
   const navigate = useNavigate();
+  const { palette, changePalette } = useTheme(); // <--- ThemeContext
 
   const handlePhotoChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -43,12 +41,11 @@ export default function Configuracoes() {
   };
 
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: bgLight, color: mainColor }}>
-      
+    <div className="flex min-h-screen" style={{ backgroundColor: palette.bg, color: palette.text }}>
       {/* Sidebar */}
       <aside
         className={`${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
-        style={{ backgroundColor: mainColor, color: "white" }}
+        style={{ backgroundColor: palette.main, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
@@ -72,22 +69,27 @@ export default function Configuracoes() {
 
       {/* Conteúdo */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        
         {/* Header */}
         <header
-          className={`flex items-center p-4 shadow-md border-b bg-[${mainColor}] border-gray-700 sticky top-0 z-20`}
+          className="flex items-center p-4 shadow-md border-b sticky top-0 z-20"
+          style={{ backgroundColor: palette.main }}
         >
           <div className="flex-1"></div>
           <div className="flex-1 flex justify-center">
-            <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+            <img
+              src="/arvore.png"
+              alt="Logo"
+              className="h-20 w-auto cursor-pointer hover:scale-110 transition-transform"
+              onClick={changePalette} // <--- muda tema ao clicar
+            />
           </div>
           <div className="flex-1 flex justify-end items-center space-x-5">
             <a href="./" className="text-white">Quer ser um patrocinador?</a>
             <a href="./" className="text-white">Quer ser um Tutor?</a>
             <button
               onClick={() => navigate("/login")}
-              className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
-              style={{ backgroundColor: accentColor, color: "#fff" }}
+              className="px-4 py-2 rounded font-semibold hover:brightness-110"
+              style={{ backgroundColor: palette.accent, color: "#fff" }} // <--- cor dinâmica
             >
               Login
             </button>
@@ -121,8 +123,7 @@ export default function Configuracoes() {
           </div>
 
           {/* Conteúdo das seções */}
-          <div className="bg-white p-8 rounded-lg shadow-md space-y-6">
-
+          <div className="p-8 rounded-lg shadow-md" style={{ backgroundColor: palette.card }}>
             {/* PERFIL */}
             {activeSection === "perfil" && (
               <div className="flex flex-col md:flex-row gap-6 items-center">
@@ -157,8 +158,18 @@ export default function Configuracoes() {
               <div>
                 <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><FiSun /> Preferências de Tema</h2>
                 <div className="flex gap-4">
-                  <button className="px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 flex items-center gap-2"><FiMoon /> Escuro</button>
-                  <button className="px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300 flex items-center gap-2"><FiSun /> Claro</button>
+                  <button
+                    className="px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 flex items-center gap-2"
+                    style={{ backgroundColor: palette.main, color: palette.text }}
+                  >
+                    <FiMoon /> Escuro
+                  </button>
+                  <button
+                    className="px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300 flex items-center gap-2"
+                    style={{ backgroundColor: palette.bg, color: palette.text }}
+                  >
+                    <FiSun /> Claro
+                  </button>
                 </div>
               </div>
             )}
@@ -177,7 +188,6 @@ export default function Configuracoes() {
                 </label>
               </div>
             )}
-
           </div>
         </main>
       </div>

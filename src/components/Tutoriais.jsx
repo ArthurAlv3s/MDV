@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "./ThemeContext.jsx";
 import {
   FiMenu,
   FiHome,
@@ -7,7 +8,7 @@ import {
   FiClock,
   FiList,
   FiMessageCircle,
-   FiMessageSquare,
+  FiMessageSquare,
   FiSettings,
 } from "react-icons/fi";
 
@@ -32,22 +33,21 @@ const allTutorials = [
 
 const categories = ["Todos", "Produtividade", "Tecnologia", "Finanças", "Comunicação", "Estudos"];
 const PAGE_SIZE = 6;
-const mainColor = "#1E293B";
-const accentColor = "#38BDF8";
-const bgLight = "#F1F5F9";
 
 export default function Tutoriais() {
-  const [menuOpen, setMenuOpen] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [sortByDate, setSortByDate] = useState("desc");
   const [visibleTutorials, setVisibleTutorials] = useState([]);
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const { palette, changePalette } = useTheme(); // usa o tema do context
+  const [menuOpen, setMenuOpen] = useState(true);
+
 
   const filteredTutorials = allTutorials
     .filter(t => (selectedCategory === "Todos" || t.category === selectedCategory) &&
-                 t.title.toLowerCase().includes(searchTerm.toLowerCase()))
+      t.title.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => sortByDate === "asc"
       ? new Date(a.date) - new Date(b.date)
       : new Date(b.date) - new Date(a.date)
@@ -68,11 +68,11 @@ export default function Tutoriais() {
   const hasMore = visibleTutorials.length < filteredTutorials.length;
 
   return (
-    <div className="flex" style={{ backgroundColor: bgLight, color: mainColor }}>
+    <div className="flex" style={{ backgroundColor: palette.bg, color: palette.text }}>
       {/* Sidebar fixa */}
       <aside
         className={`fixed top-0 left-0 h-screen ${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col transition-all duration-300`}
-        style={{ backgroundColor: mainColor, color: "white" }}
+        style={{ backgroundColor: palette.main, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
@@ -99,9 +99,8 @@ export default function Tutoriais() {
         {/* Header fixo */}
         <header
           className="fixed top-0 left-0 right-0 flex items-center p-4 shadow-md z-10"
-          style={{ backgroundColor: mainColor, marginLeft: menuOpen ? "16rem" : "4rem" }}
+          style={{ backgroundColor: palette.main, marginLeft: menuOpen ? "16rem" : "4rem" }}
         >
-          {/* Esquerda → Barra de Pesquisa */}
           <div className="flex-1 flex">
             <input
               type="text"
@@ -112,26 +111,28 @@ export default function Tutoriais() {
             />
           </div>
 
-          {/* Centro → Logo */}
           <div className="flex-1 flex justify-center">
-            <img src="/arvore.png" alt="Logo" className="h-20 w-auto" />
+            <img
+              src="/arvore.png"
+              alt="Logo"
+              className="h-20 w-auto cursor-pointer hover:scale-110 transition-transform"
+              onClick={changePalette} // aqui
+            />
           </div>
 
-          {/* Direita → Links e Botão */}
           <div className="flex-1 flex justify-end items-center space-x-5">
             <a href="./" className="text-white">Quer ser um patrocinador?</a>
             <a href="./" className="text-white">Quer ser um Tutor?</a>
             <button
               onClick={() => navigate("/login")}
-              className={`px-4 py-2 rounded font-semibold hover:brightness-110`}
-              style={{ backgroundColor: accentColor, color: "#fff" }}
+              className="px-4 py-2 rounded font-semibold hover:brightness-110"
+              style={{ backgroundColor: palette.accent, color: "#fff" }}
             >
               Login
             </button>
           </div>
         </header>
 
-        {/* Main rolável */}
         <main className="flex-1 p-6 mt-32 overflow-auto">
           <h1 className="text-2xl font-bold mb-4">Tutoriais</h1>
 
@@ -158,11 +159,11 @@ export default function Tutoriais() {
           {/* Grid de tutoriais */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {visibleTutorials.map((tutorial, idx) => (
-              <div key={`${tutorial.title}-${idx}`} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div key={`${tutorial.title}-${idx}`} className="rounded-lg shadow-md overflow-hidden" style={{ backgroundColor: palette.card }}>
                 <img src={tutorial.img} alt={tutorial.title} className="w-full h-48 object-cover" />
                 <div className="p-4">
                   <h2 className="font-bold text-lg">{tutorial.title}</h2>
-                  <p className="text-sm text-gray-500">{tutorial.category} • {new Date(tutorial.date).toLocaleDateString()}</p>
+                  <p className="text-sm" style={{ color: palette.text }}>{tutorial.category} • {new Date(tutorial.date).toLocaleDateString()}</p>
                 </div>
               </div>
             ))}
@@ -170,13 +171,13 @@ export default function Tutoriais() {
 
           {hasMore && (
             <div className="flex justify-center mt-6">
-              <button onClick={loadMore} className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600">
+              <button onClick={loadMore} className="px-4 py-2 rounded hover:brightness-110" style={{ backgroundColor: palette.accent, color: "#fff" }}>
                 Carregar Mais
               </button>
             </div>
           )}
 
-          {!hasMore && <p className="text-gray-500 text-center mt-6">Fim dos resultados</p>}
+          {!hasMore && <p className="text-center mt-6" style={{ color: palette.text }}>Fim dos resultados</p>}
         </main>
       </div>
     </div>
