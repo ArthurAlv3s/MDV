@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "./ThemeContext.jsx";
 import {
@@ -29,7 +29,17 @@ export default function Chatbot() {
   ]);
   const [input, setInput] = useState("");
   const navigate = useNavigate();
-  const { palette, changePalette } = useTheme(); // <- hook do ThemeContext
+  const { palette, changePalette } = useTheme();
+
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSend = () => {
     if (input.trim() === "") return;
@@ -59,8 +69,13 @@ export default function Chatbot() {
         style={{ backgroundColor: palette.main, color: "white" }}
       >
         <div className="flex justify-between items-center mb-6">
-          {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
+          {menuOpen && (
+            <span className="font-bold text-xl">Manual da Vida</span>
+          )}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="hover:opacity-80"
+          >
             <FiMenu size={24} />
           </button>
         </div>
@@ -86,7 +101,10 @@ export default function Chatbot() {
           style={{ backgroundColor: palette.main, borderColor: palette.accent }}
         >
           {/* Logo com clique para mudar paleta */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={changePalette}>
+          <div
+            className="flex items-center space-x-3 cursor-pointer"
+            onClick={changePalette}
+          >
             <img
               src="/coruja_avatar.png"
               alt="Noctua"
@@ -104,45 +122,48 @@ export default function Chatbot() {
           </button>
         </header>
 
-        {/* Chat Area */}
-        <main className="flex-1 p-6 flex flex-col justify-between relative">
-          <div className="flex-1 overflow-y-auto mb-4 space-y-4 flex flex-col relative z-10">
+        <main className="flex-1 flex flex-col p-6 relative">
+          {/* Lista de mensagens com scroll */}
+          <div className="flex-1 overflow-y-auto mb-4 flex flex-col space-y-4">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`p-3 rounded-lg max-w-xs ${
+                className={`p-3 rounded-lg max-w-[70%] break-words whitespace-normal ${
                   msg.sender === "user"
-                    ? "text-white self-end text-right"
-                    : "self-start text-left"
+                    ? "self-end bg-blue-500 text-white"
+                    : "self-start bg-gray-200 text-black"
                 }`}
-                style={{
-                  backgroundColor:
-                    msg.sender === "user" ? palette.accent : palette.card,
-                  color: msg.sender === "user" ? "#fff" : palette.text,
-                }}
               >
                 {msg.text}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
-          <div className="flex items-center border rounded-lg p-2 bg-white relative z-10">
+          {/* Input fixo relativo ao conteúdo */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+            className="sticky bottom-0 flex items-center border-t p-4 bg-white z-10"
+            style={{ backgroundColor: palette.bg }}
+          >
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Digite sua mensagem..."
-              className="flex-1 p-2 outline-none"
+              className="flex-1 p-2 outline-none border rounded-lg"
             />
             <button
-              onClick={handleSend}
+              type="submit"
               className="ml-2 px-4 py-2 rounded text-white"
               style={{ backgroundColor: palette.accent }}
             >
               Enviar
             </button>
-          </div>
+          </form>
         </main>
       </div>
     </div>
