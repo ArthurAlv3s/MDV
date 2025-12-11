@@ -265,7 +265,7 @@ export default function Tutoriais() {
                   src={user.fotoPerfil || "https://via.placeholder.com/40"}
                   alt="Perfil"
                   className="w-10 h-10 rounded-full border-2 border-white cursor-pointer"
-                  onClick={() => navigate("/perfil")}
+                  onClick={() => navigate("/config")}
                 />
                 <button
                   onClick={() => {

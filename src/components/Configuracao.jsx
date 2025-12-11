@@ -139,7 +139,7 @@ export default function Configuracoes() {
               src={user?.fotoPerfil || "/user.png"}
               alt="Perfil"
               className="h-10 w-10 rounded-full border cursor-pointer"
-              onClick={() => navigate("/perfil")}
+              onClick={() => navigate("/config")}
             />
 
             <button
