@@ -22,7 +22,6 @@ const menuItems = [
   { name: "Minhas Playlists", icon: <FiList />, path: "/playlists" },
   { name: "Chatbot", icon: <FiMessageSquare />, path: "/chatbot" },
   { name: "Histórico", icon: <FiClock />, path: "/historico" },
-  { name: "Feedback", icon: <FiMessageCircle />, path: "/feedback" },
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
 ];
 
@@ -200,7 +199,7 @@ export default function MinhasPlaylists() {
         className={`${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
         style={{ backgroundColor: palette.main, color: "white" }}
       >
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-10">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
           <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
             <FiMenu size={24} />
@@ -212,13 +211,33 @@ export default function MinhasPlaylists() {
             <div
               key={idx}
               onClick={() => navigate(item.path)}
-              className="flex items-center mb-4 cursor-pointer hover:opacity-80"
+              className="flex items-center mb-8 cursor-pointer hover:opacity-80"
             >
               <span className="text-xl">{item.icon}</span>
               {menuOpen && <span className="ml-4">{item.name}</span>}
             </div>
           ))}
         </nav>
+<div className="mt-auto w-full pb-4 flex justify-center">
+  {menuOpen ? (
+    <div
+      className="text-xs opacity-70 leading-tight text-center"
+      style={{ color: "white" }}
+    >
+      Tudo neste site é de direito exclusivo.<br />
+      © {new Date().getFullYear()}
+    </div>
+  ) : (
+    <div
+      className="text-[11px] opacity-90 leading-none text-center w-full"
+      title={`Tudo neste site é de direito exclusivo. © ${new Date().getFullYear()}`}
+      style={{ color: "white" }}
+    >
+      © {new Date().getFullYear()}
+    </div>
+  )}
+</div>
+
       </aside>
 
       {/* CONTEÚDO PRINCIPAL */}
@@ -239,7 +258,7 @@ export default function MinhasPlaylists() {
             />
           </div>
 
-          <div className="flex-1 flex justify-end items-center space-x-5 text-white">
+          <div className="text-sm flex-1 flex justify-end items-center space-x-5 text-white">
             <a href="#">Quer ser um patrocinador?</a>
             <a href="#">Quer ser um Tutor?</a>
 

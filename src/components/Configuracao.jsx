@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "./ThemeContext.jsx";
 import { useAuth } from "../components/AuthContext.jsx";
+import FeedbackSection from "./feedbacksection.jsx";
+import UserInfoSection from "./UserInfoSection.jsx";
+
 
 import {
   FiMenu,
@@ -12,10 +15,9 @@ import {
   FiMessageCircle,
   FiSettings,
   FiUser,
-  FiLogOut,
-  FiSun,
-  FiBell,
   FiMessageSquare,
+  FiChevronDown,
+  FiChevronUp,
 } from "react-icons/fi";
 
 const menuItems = [
@@ -24,22 +26,19 @@ const menuItems = [
   { name: "Minhas Playlists", icon: <FiList />, path: "/playlists" },
   { name: "Chatbot", icon: <FiMessageSquare />, path: "/chatbot" },
   { name: "Histórico", icon: <FiClock />, path: "/historico" },
-  { name: "Feedback", icon: <FiMessageCircle />, path: "/feedback" },
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
 ];
 
 export default function Configuracoes() {
   const [menuOpen, setMenuOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState("perfil");
-
   const [editNomeOpen, setEditNomeOpen] = useState(false);
   const [novoNome, setNovoNome] = useState("");
+  const [userInfoOpen, setUserInfoOpen] = useState(true);
 
   const navigate = useNavigate();
   const { palette, changePalette } = useTheme();
   const { user, setUser, logout } = useAuth();
 
-  // 📌 Upload real
   const handlePhotoUpload = async (e) => {
     if (!e.target.files[0]) return;
 
@@ -62,37 +61,35 @@ export default function Configuracoes() {
     }
   };
 
-  // 📌 Atualizar nome
-  const salvarNome = async () => {
-    const res = await fetch(`http://localhost:5000/api/users/${user._id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome: novoNome }),
-    });
+const salvarNome = async (novoNome, fechar) => {
+  const res = await fetch(`http://localhost:5000/api/users/${user._id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome: novoNome }),
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (data.success) {
-      setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setEditNomeOpen(false);
-      alert("Nome atualizado!");
-    } else {
-      alert("Erro ao atualizar nome");
-    }
-  };
+  if (data.success) {
+    setUser(data.user);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    fechar();
+    alert("Nome atualizado!");
+  } else {
+    alert("Erro ao atualizar nome");
+  }
+};
+
 
   return (
-    <div
-      className="flex min-h-screen"
-      style={{ backgroundColor: palette.bg, color: palette.text }}
-    >
-      {/* Sidebar */}
+    <div className="flex min-h-screen" style={{ backgroundColor: palette.bg, color: palette.text }}>
+      {/* SIDEBAR */}
       <aside
-        className={`${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col transition-all duration-300`}
-        style={{ backgroundColor: palette.main, color: "white" }}
-      >
-        <div className="flex justify-between items-center mb-6">
+          className={`${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
+          style={{ backgroundColor: palette.main, color: "white" }}
+        >
+
+        <div className="flex justify-between items-center mb-10">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
           <button onClick={() => setMenuOpen(!menuOpen)}>
             <FiMenu size={24} />
@@ -104,26 +101,46 @@ export default function Configuracoes() {
             <div
               key={idx}
               onClick={() => navigate(item.path)}
-              className="flex items-center mb-4 cursor-pointer hover:opacity-80"
+              className="flex items-center mb-8 cursor-pointer hover:opacity-80"
             >
               <span className="text-xl">{item.icon}</span>
               {menuOpen && <span className="ml-4">{item.name}</span>}
             </div>
           ))}
         </nav>
+
+<div className="mt-auto w-full pb-4 flex justify-center">
+  {menuOpen ? (
+    <div
+      className="text-xs opacity-70 leading-tight text-center"
+      style={{ color: "white" }}
+    >
+      Tudo neste site é de direito exclusivo.<br />
+      © {new Date().getFullYear()}
+    </div>
+  ) : (
+    <div
+      className="text-[11px] opacity-90 leading-none text-center w-full"
+      title={`Tudo neste site é de direito exclusivo. © ${new Date().getFullYear()}`}
+      style={{ color: "white" }}
+    >
+      © {new Date().getFullYear()}
+    </div>
+  )}
+</div>
+
+
       </aside>
 
-      {/* Conteúdo */}
+      {/* CONTEÚDO */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
+       {/* HEADER */}
         <header
-          className="flex items-center p-4 shadow-md border-b sticky top-0 z-20"
-          style={{ backgroundColor: palette.main }}
+          className="flex items-center p-4 shadow-md border-b sticky top-0 z-20 transition-colors duration-500"
+          style={{ backgroundColor: palette.main, borderColor: palette.accent }}
         >
-          {/* Espaço lateral esquerdo (vazio) */}
           <div className="flex-1"></div>
 
-          {/* Logo central */}
           <div className="flex-1 flex justify-center">
             <img
               src="/arvore.png"
@@ -133,81 +150,57 @@ export default function Configuracoes() {
             />
           </div>
 
-          {/* Área direita: foto + botão sair */}
-          <div className="flex-1 flex justify-end items-center gap-5">
-            <img
-              src={user?.fotoPerfil || "/user.png"}
-              alt="Perfil"
-              className="h-10 w-10 rounded-full border cursor-pointer"
-              onClick={() => navigate("/config")}
-            />
+          <div className="text-sm flex-1 flex justify-end items-center space-x-5 text-white">
+            <a href="#">Quer ser um patrocinador?</a>
+            <a href="#">Quer ser um Tutor?</a>
 
-            <button
-              onClick={() => {
-                logout();             // limpa usuário
-                navigate("/login");   // redireciona corretamente ✔
-              }}
-              className="px-4 py-2 rounded font-semibold bg-red-500 text-white hover:brightness-110"
-            >
-              Sair
-            </button>
+            {user ? (
+              <div className="flex items-center space-x-3">
+                <img
+                  src={user.fotoPerfil || "https://via.placeholder.com/40"}
+                  alt="Perfil"
+                  className="w-10 h-10 rounded-full border-2 border-white cursor-pointer"
+                  onClick={() => navigate("/config")}
+                />
+                <button
+                  onClick={() => {
+                    logout();
+                    navigate("/login");
+                  }}
+                  className="px-3 py-1 rounded font-semibold hover:brightness-110"
+                  style={{ backgroundColor: palette.accent }}
+                >
+                  Sair
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate("/login")}
+                className="px-4 py-2 rounded font-semibold hover:brightness-110"
+                style={{ backgroundColor: palette.accent }}
+              >
+                Login
+              </button>
+            )}
           </div>
         </header>
 
-
-        {/* Main */}
+        {/* MAIN */}
         <main className="p-6">
           <h1 className="text-3xl font-bold mb-6">Configurações</h1>
 
-          {/* Perfil */}
-          <div
-            className="p-6 rounded shadow-md"
-            style={{ backgroundColor: palette.card }}
-          >
-            <h2 className="text-2xl font-bold mb-4">Informações do Usuário</h2>
+          {/* PERFIL EXPANSÍVEL */}
 
-            <p><strong>Nome:</strong> {user?.nome}</p>
-            <p><strong>Email:</strong> {user?.email}</p>
+      <UserInfoSection
+        palette={palette}
+        user={user}
+        handlePhotoUpload={handlePhotoUpload}
+        salvarNome={salvarNome}
+/>
 
-            <div className="flex gap-4 mt-6">
-              {/* Alterar Foto */}
-              <label className="px-4 py-2 bg-blue-600 text-white rounded cursor-pointer flex items-center gap-2">
-                <FiUser /> Alterar Foto
-                <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-              </label>
 
-              {/* Alterar Nome */}
-              <button
-                onClick={() => {
-                  setEditNomeOpen(!editNomeOpen);
-                  setNovoNome(user?.nome || ""); // ✅ Inicializa o input com o nome atual
-                }}
-                className="px-4 py-2 bg-green-500 text-white rounded flex items-center gap-2"
-              >
-                <FiUser /> Alterar Nome
-              </button>
-            </div>
-
-            {/* Área expandida */}
-            {editNomeOpen && (
-              <div className="mt-4 p-4 bg-gray-200 rounded">
-                <label className="font-semibold">Novo nome:</label>
-                <input
-                  type="text"
-                  className="w-full p-2 rounded mt-2"
-                  value={novoNome}
-                  onChange={(e) => setNovoNome(e.target.value)}
-                  autoFocus // ✅ Para focar automaticamente quando abrir
-                />
-                <button
-                  onClick={salvarNome}
-                  className="mt-3 px-4 py-2 bg-blue-600 text-white rounded"
-                >
-                  Salvar
-                </button>
-              </div>
-            )}
-          </div>
+          {/* FEEDBACK */}
+          <FeedbackSection palette={palette} />
         </main>
       </div>
     </div>

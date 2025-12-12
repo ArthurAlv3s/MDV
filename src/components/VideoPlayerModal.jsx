@@ -38,7 +38,7 @@ export default function VideoPlayerModal({
       <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full overflow-hidden animate-fadeIn">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-5 text-white relative">
+        <div className="bg-blue-900 p-5 text-white relative">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 hover:bg-white/20 rounded-full transition-all"

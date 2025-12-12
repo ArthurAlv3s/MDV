@@ -23,7 +23,6 @@ const menuItems = [
   { name: "Minhas Playlists", icon: <FiList />, path: "/playlists" },
   { name: "Chatbot", icon: <FiMessageSquare />, path: "/chatbot" },
   { name: "Histórico", icon: <FiClock />, path: "/historico" },
-  { name: "Feedback", icon: <FiMessageCircle />, path: "/feedback" },
   { name: "Configuração", icon: <FiSettings />, path: "/config" },
 ];
 
@@ -234,10 +233,13 @@ export default function LandingPage() {
     >
       {/* Sidebar */}
       <aside
-        className={`${menuOpen ? "w-64" : "w-16"} p-4 flex flex-col h-screen sticky top-0 transition-all duration-300`}
-        style={{ backgroundColor: palette.main, color: "white" }}
-      >
-        <div className="flex justify-between items-center mb-6">
+  className={`${
+    menuOpen ? "w-64" : "w-16"
+  } p-4 flex flex-col h-screen fixed top-0 left-0 transition-all duration-300 z-30`}
+  style={{ backgroundColor: palette.main, color: "white" }}
+>
+
+        <div className="flex justify-between items-center mb-10">
           {menuOpen && <span className="font-bold text-xl">Manual da Vida</span>}
           <button onClick={() => setMenuOpen(!menuOpen)} className="hover:opacity-80">
             <FiMenu size={24} />
@@ -249,17 +251,41 @@ export default function LandingPage() {
             <div
               key={idx}
               onClick={() => navigate(item.path)}
-              className="flex items-center mb-4 cursor-pointer hover:opacity-80"
+              className="flex items-center mb-8 cursor-pointer hover:opacity-80"
             >
               <span className="text-xl">{item.icon}</span>
               {menuOpen && <span className="ml-4">{item.name}</span>}
             </div>
           ))}
         </nav>
+<div className="mt-auto w-full pb-4 flex justify-center">
+  {menuOpen ? (
+    <div
+      className="text-xs opacity-70 leading-tight text-center"
+      style={{ color: "white" }}
+    >
+      Tudo neste site é de direito exclusivo.<br />
+      © {new Date().getFullYear()}
+    </div>
+  ) : (
+    <div
+      className="text-[11px] opacity-90 leading-none text-center w-full"
+      title={`Tudo neste site é de direito exclusivo. © ${new Date().getFullYear()}`}
+      style={{ color: "white" }}
+    >
+      © {new Date().getFullYear()}
+    </div>
+  )}
+</div>
+
       </aside>
 
       {/* CONTEÚDO PRINCIPAL */}
-      <div className="flex-1 flex flex-col h-screen">
+      <div
+  className="flex-1 flex flex-col h-screen transition-all duration-300"
+  style={{ marginLeft: menuOpen ? "16rem" : "4rem" }} // NÃO AFETA O HEADER
+>
+
         {/* HEADER */}
         <header
           className="flex items-center p-4 shadow-md border-b sticky top-0 z-20 transition-colors duration-500"
@@ -276,7 +302,7 @@ export default function LandingPage() {
             />
           </div>
 
-          <div className="flex-1 flex justify-end items-center space-x-5 text-white">
+          <div className="text-sm flex-1 flex justify-end items-center space-x-5 text-white">
             <a href="#">Quer ser um patrocinador?</a>
             <a href="#">Quer ser um Tutor?</a>
 
@@ -315,7 +341,7 @@ export default function LandingPage() {
         <main className="flex-1 overflow-auto p-6 space-y-12">
           {/* VÍDEOS EM DESTAQUE */}
           <section>
-            <h2 className="text-3xl font-bold mb-4">🌟 Em Destaque</h2>
+            <h2 className="text-3xl font-bold mb-4"> Em Destaque</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {videosEmDestaque.map((video) => {
                 const youtubeId =
@@ -331,7 +357,7 @@ export default function LandingPage() {
                     onClick={() => openVideo(video)}
                   >
                     <div className="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold">
-                      ⭐ Destaque
+                       Destaque
                     </div>
                     <img src={thumbnail} className="w-full h-44 object-cover" />
                     <div className="p-4">
@@ -349,7 +375,7 @@ export default function LandingPage() {
           {/* VÍDEOS CURTIDOS (só aparece se logado) */}
           {user && videosCurtidos.length > 0 && (
             <section>
-              <h2 className="text-2xl font-bold mb-4">❤️ Vídeos que Você Curtiu</h2>
+              <h2 className="text-2xl font-bold mb-4"> Vídeos que Você Curtiu</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {videosCurtidos.map((video) => {
                   const youtubeId =
@@ -380,7 +406,7 @@ export default function LandingPage() {
 
           {/* TODOS OS VÍDEOS */}
           <section>
-            <h2 className="text-2xl font-bold mb-4">📚 Todos os Vídeos</h2>
+            <h2 className="text-2xl font-bold mb-4"> Todos os Vídeos</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {videos.map((video) => {
                 const youtubeId =

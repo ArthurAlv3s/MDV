@@ -12,7 +12,6 @@ import Tutoriais from "./components/Tutoriais.jsx";
 import Mp from "./components/Minhas Playlists";
 import Ct from "./components/Chatbot.jsx";
 import Historico from "./components/Historico.jsx";
-import Feedback from "./components/Feedback.jsx";
 import Config from "./components/Configuracao.jsx";
 
 function App() {
@@ -27,7 +26,6 @@ function App() {
             <Route path="/playlists" element={<Mp />} />
             <Route path="/chatbot" element={<Ct />} />
             <Route path="/historico" element={<Historico />} />  
-            <Route path="/feedback" element={<Feedback />} />  
             <Route path="/config" element={<Config />} />  
           </Routes>
         </BrowserRouter>
